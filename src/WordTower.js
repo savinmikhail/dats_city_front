@@ -154,7 +154,6 @@ const WordTower = () => {
     // Create letter cubes with text sprites
     towerData.forEach(({ word, pos, dir }) => {
       const [dirX, dirY, dirZ] = directionVectors[dir];
-      const letterSpacing = 1.2; // Расстояние между кубиками
       
       word.split('').forEach((letter, index) => {
         // Create cube for each letter
@@ -168,9 +167,9 @@ const WordTower = () => {
         
         // Position the cube
         cube.position.set(
-          pos[0] + dirX * index * letterSpacing,
-          pos[1] + dirY * index * letterSpacing,
-          pos[2] + dirZ * index * letterSpacing
+          pos[0] + dirX * index,
+          pos[1] + dirY * index,
+          pos[2] + dirZ * index
         );
 
         // Position text sprite on the cube
