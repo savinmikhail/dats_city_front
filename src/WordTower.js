@@ -48,7 +48,7 @@ const defaultTowerData = [
 ];
 
 const directionVectors = {
-  1: [0, -1, 0], // вниз по Y
+  1: [0, -1, 0], // назад по Y
   2: [1, 0, 0],  // вправо по X
   3: [0, 0, 1]   // вверх по Z
 };
@@ -128,8 +128,9 @@ const WordTower = () => {
     scene.background = new THREE.Color(0x000000);
 
     // Camera setup
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.set(10, 10, 10);
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    camera.position.set(10, -60, 30); // Располагаем камеру так, чтобы видеть сетку сверху и сбоку
+    camera.lookAt(15, 15, 0); // Смотрим на центр сетки
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
@@ -146,6 +147,7 @@ const WordTower = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.target.set(15, 15, 0); // Центр вращения камеры - центр сетки
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -170,15 +172,16 @@ const WordTower = () => {
     const createTextSprite = (text) => {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      const fontSize = 32;
+      const fontSize = 48; // Увеличиваем базовый размер шрифта
       context.font = `${fontSize}px Arial`;
       
       const metrics = context.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      canvas.width = textWidth + 10;
-      canvas.height = textHeight + 10;
+      // Увеличиваем размер canvas для лучшего качества текста
+      canvas.width = textWidth + 20;
+      canvas.height = textHeight + 20;
 
       context.fillStyle = 'rgba(0, 0, 0, 0)';
       context.fillRect(0, 0, canvas.width, canvas.height);
@@ -186,17 +189,19 @@ const WordTower = () => {
       context.font = `${fontSize}px Arial`;
       context.fillStyle = 'white';
       context.textBaseline = 'middle';
-      context.fillText(text, 5, canvas.height / 2);
+      context.textAlign = 'center';
+      context.fillText(text, canvas.width / 2, canvas.height / 2);
 
       const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter; // Улучшаем качество текстуры
       const spriteMaterial = new THREE.SpriteMaterial({ 
         map: texture,
         transparent: true
       });
       
       const sprite = new THREE.Sprite(spriteMaterial);
-      const scale = 0.5;
-      sprite.scale.set(scale * canvas.width / canvas.height, scale, 1);
+      const scale = 0.7; // Корректируем масштаб
+      sprite.scale.set(scale, scale, 1);
       
       return sprite;
     };
@@ -240,13 +245,16 @@ const WordTower = () => {
             pos[2] + dirZ * index
           );
 
-          if (dir === 1) { // вдоль Y
+          if (dir === 1) { // вдоль Y (назад)
             cube.rotation.x = Math.PI / 2;
-            textSprite.position.set(0, 0, 0.6);
-          } else if (dir === 2) { // вдоль X
-            textSprite.position.set(0, 0, 0.6);
-          } else if (dir === 3) { // вдоль Z
-            textSprite.position.set(0, 0.6, 0);
+            textSprite.position.set(0, -0.7, 0); // Увеличиваем отступ от грани
+            textSprite.rotation.z = Math.PI / 2;
+          } else if (dir === 2) { // вдоль X (вправо)
+            textSprite.position.set(0, -0.7, 0); // Увеличиваем отступ от грани
+            textSprite.rotation.z = Math.PI / 2;
+          } else if (dir === 3) { // вдоль Z (вверх)
+            textSprite.position.set(0, -0.7, 0); // Увеличиваем отступ от грани
+            textSprite.rotation.z = Math.PI / 2;
           }
 
           cube.add(textSprite);
@@ -257,6 +265,7 @@ const WordTower = () => {
 
     // Grid helper
     const gridHelper = new THREE.GridHelper(30, 30);
+    gridHelper.rotation.x = Math.PI / 2; // Поворачиваем сетку на 90 градусов вокруг оси X
     scene.add(gridHelper);
 
     // Bounding box
@@ -268,14 +277,14 @@ const WordTower = () => {
       linewidth: 2
     });
     const boundingBox = new THREE.LineSegments(boxEdges, boundingBoxMaterial);
-    boundingBox.position.set(15, -15, 50);
+    boundingBox.position.set(15, -15, 50); // Центрируем коробку относительно начала координат
     scene.add(boundingBox);
 
     // Create dimension labels using the existing createTextSprite function
     const dimensionLabels = [
-      { text: '30', position: [30, 0, 0], color: 'white' },
-      { text: '30', position: [0, -30, 0], color: 'white' },
-      { text: '100', position: [0, 0, 100], color: 'white' }
+      { text: '30', position: [30, 0, 0], color: 'white' },   // X размер
+      { text: '30', position: [0, -30, 0], color: 'white' },  // Y размер
+      { text: '100', position: [0, 0, 100], color: 'white' }  // Z размер (высота)
     ];
 
     dimensionLabels.forEach(({ text, position, color }) => {
@@ -295,10 +304,6 @@ const WordTower = () => {
       { text: 'Z', color: '#0000ff', position: [0, 0, 11] }
     ];
 
-    // Initial camera position for better view
-    camera.position.set(20, -20, 40);
-    camera.lookAt(15, -15, 50);
-
     // Initial tower creation
     createTower(towerData);
 
@@ -306,13 +311,6 @@ const WordTower = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-      
-      scene.traverse((object) => {
-        if (object instanceof THREE.Sprite) {
-          object.quaternion.copy(camera.quaternion);
-        }
-      });
-      
       renderer.render(scene, camera);
     };
 
