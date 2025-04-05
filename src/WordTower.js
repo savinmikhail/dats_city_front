@@ -48,9 +48,9 @@ const defaultTowerData = [
 ];
 
 const directionVectors = {
-  1: [0, 1, 0],  // вверх по Y
-  2: [1, 0, 0],  // вправо по X
-  3: [0, 0, -1]  // назад по Z
+  1: [0, 0, -1],  // назад по Z
+  2: [1, 0, 0],   // вправо по X
+  3: [0, 1, 0]    // вверх по Y
 };
 
 const TowerInput = ({ onUpdate }) => {
@@ -245,14 +245,14 @@ const WordTower = () => {
             pos[2] + dirZ * index
           );
 
-          if (dir === 1) { // вдоль Y (вверх)
+          if (dir === 1) { // вдоль Z (назад)
+            cube.rotation.y = Math.PI; // Поворачиваем куб на 180 градусов
             textSprite.position.set(0, -0.7, 0);
             textSprite.rotation.z = Math.PI / 2;
           } else if (dir === 2) { // вдоль X (вправо)
             textSprite.position.set(0, -0.7, 0);
             textSprite.rotation.z = Math.PI / 2;
-          } else if (dir === 3) { // вдоль Z (назад)
-            cube.rotation.y = Math.PI; // Поворачиваем куб на 180 градусов
+          } else if (dir === 3) { // вдоль Y (вверх)
             textSprite.position.set(0, -0.7, 0);
             textSprite.rotation.z = Math.PI / 2;
           }
