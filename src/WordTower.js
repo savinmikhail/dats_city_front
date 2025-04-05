@@ -304,6 +304,12 @@ const WordTower = () => {
       { text: 'Z', color: '#0000ff', position: [0, 0, 11] }
     ];
 
+    axisLabels.forEach(({ text, position }) => {
+      const label = createTextSprite(text);
+      label.position.set(...position);
+      scene.add(label);
+    });
+
     // Initial tower creation
     createTower(towerData);
 
