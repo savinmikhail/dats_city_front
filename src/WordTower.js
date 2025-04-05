@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const towerData = [
+const defaultTowerData = [
   {
     id: 0,
     pos: [0, 0, 0],
@@ -53,8 +53,71 @@ const directionVectors = {
   3: [0, 1, 0]   // вверх по Y
 };
 
+const TowerInput = ({ onUpdate }) => {
+  const [jsonInput, setJsonInput] = useState(JSON.stringify(defaultTowerData, null, 2));
+  const [error, setError] = useState('');
+
+  const handleUpdate = () => {
+    try {
+      const parsedData = JSON.parse(jsonInput);
+      onUpdate(parsedData);
+      setError('');
+    } catch (e) {
+      setError('Invalid JSON: ' + e.message);
+    }
+  };
+
+  return (
+    <div style={{
+      position: 'absolute',
+      top: 20,
+      left: 20,
+      zIndex: 1000,
+      background: 'rgba(0, 0, 0, 0.7)',
+      padding: '20px',
+      borderRadius: '8px',
+      color: 'white'
+    }}>
+      <div style={{ marginBottom: '10px' }}>
+        <textarea
+          value={jsonInput}
+          onChange={(e) => setJsonInput(e.target.value)}
+          style={{
+            width: '300px',
+            height: '200px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: 'white',
+            border: '1px solid #666',
+            padding: '10px',
+            fontFamily: 'monospace'
+          }}
+        />
+      </div>
+      <button
+        onClick={handleUpdate}
+        style={{
+          padding: '10px 20px',
+          background: '#00aaff',
+          border: 'none',
+          borderRadius: '4px',
+          color: 'white',
+          cursor: 'pointer'
+        }}
+      >
+        Update Tower
+      </button>
+      {error && (
+        <div style={{ color: 'red', marginTop: '10px' }}>
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const WordTower = () => {
   const mountRef = useRef(null);
+  const [towerData, setTowerData] = useState(defaultTowerData);
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -107,23 +170,19 @@ const WordTower = () => {
     const createTextSprite = (text) => {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      const fontSize = 32; // Уменьшаем размер шрифта для кубиков
+      const fontSize = 32;
       context.font = `${fontSize}px Arial`;
       
-      // Measure text
       const metrics = context.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      // Set canvas size with padding
       canvas.width = textWidth + 10;
       canvas.height = textHeight + 10;
 
-      // Draw background
       context.fillStyle = 'rgba(0, 0, 0, 0)';
       context.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw text
       context.font = `${fontSize}px Arial`;
       context.fillStyle = 'white';
       context.textBaseline = 'middle';
@@ -136,7 +195,7 @@ const WordTower = () => {
       });
       
       const sprite = new THREE.Sprite(spriteMaterial);
-      const scale = 0.5; // Уменьшаем масштаб спрайта для кубиков
+      const scale = 0.5;
       sprite.scale.set(scale * canvas.width / canvas.height, scale, 1);
       
       return sprite;
@@ -151,43 +210,49 @@ const WordTower = () => {
       opacity: 0.8
     });
 
-    // Create letter cubes with text sprites
-    towerData.forEach(({ word, pos, dir }) => {
-      const [dirX, dirY, dirZ] = directionVectors[dir];
-      
-      word.split('').forEach((letter, index) => {
-        // Create cube for each letter
-        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const cube = new THREE.Mesh(cubeGeometry, boxMaterial);
-        cube.castShadow = true;
-        cube.receiveShadow = true;
+    // Function to create tower
+    const createTower = (data) => {
+      // Clear existing objects
+      scene.children = scene.children.filter(child => 
+        child instanceof THREE.AmbientLight || 
+        child instanceof THREE.DirectionalLight ||
+        child instanceof THREE.GridHelper ||
+        child instanceof THREE.AxesHelper
+      );
 
-        // Create text sprite for the letter
-        const textSprite = createTextSprite(letter);
+      // Create letter cubes with text sprites
+      data.forEach(({ word, pos, dir }) => {
+        const [dirX, dirY, dirZ] = directionVectors[dir];
         
-        // Position the cube
-        cube.position.set(
-          pos[0] + dirX * index,
-          pos[1] + dirY * index,
-          pos[2] + dirZ * index
-        );
+        word.split('').forEach((letter, index) => {
+          const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+          const cube = new THREE.Mesh(cubeGeometry, boxMaterial);
+          cube.castShadow = true;
+          cube.receiveShadow = true;
 
-        // Position text sprite on the cube
-        if (dir === 1) { // вдоль Z
-          cube.rotation.y = Math.PI / 2;
-          textSprite.position.set(0, 0.6, 0);
-        } else if (dir === 2) { // вдоль X
-          textSprite.position.set(0, 0.6, 0);
-        } else if (dir === 3) { // вдоль Y
-          cube.rotation.z = Math.PI / 2;
-          textSprite.position.set(0, 0, 0.6);
-        }
+          const textSprite = createTextSprite(letter);
+          
+          cube.position.set(
+            pos[0] + dirX * index,
+            pos[1] + dirY * index,
+            pos[2] + dirZ * index
+          );
 
-        // Add text sprite as child of cube
-        cube.add(textSprite);
-        scene.add(cube);
+          if (dir === 1) {
+            cube.rotation.y = Math.PI / 2;
+            textSprite.position.set(0, 0.6, 0);
+          } else if (dir === 2) {
+            textSprite.position.set(0, 0.6, 0);
+          } else if (dir === 3) {
+            cube.rotation.z = Math.PI / 2;
+            textSprite.position.set(0, 0, 0.6);
+          }
+
+          cube.add(textSprite);
+          scene.add(cube);
+        });
       });
-    });
+    };
 
     // Grid helper
     const gridHelper = new THREE.GridHelper(20, 20);
@@ -204,20 +269,16 @@ const WordTower = () => {
       const fontSize = 24;
       context.font = `${fontSize}px Arial`;
       
-      // Measure text
       const metrics = context.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      // Set canvas size with padding
       canvas.width = textWidth + 10;
       canvas.height = textHeight + 10;
 
-      // Draw background
       context.fillStyle = 'rgba(0, 0, 0, 0)';
       context.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw text
       context.font = `${fontSize}px Arial`;
       context.fillStyle = color;
       context.textBaseline = 'middle';
@@ -248,12 +309,14 @@ const WordTower = () => {
       scene.add(label);
     });
 
+    // Initial tower creation
+    createTower(towerData);
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
       
-      // Update all sprites to face camera
       scene.traverse((object) => {
         if (object instanceof THREE.Sprite) {
           object.quaternion.copy(camera.quaternion);
@@ -283,9 +346,14 @@ const WordTower = () => {
       mountRef.current.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, []);
+  }, [towerData]);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
+  return (
+    <>
+      <TowerInput onUpdate={setTowerData} />
+      <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />
+    </>
+  );
 };
 
 export default WordTower;
