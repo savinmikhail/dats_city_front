@@ -53,267 +53,6 @@ const directionVectors = {
   3: [0, 1, 0]   // вверх по Y
 };
 
-const createTextShape = (char) => {
-  const shape = new THREE.Shape();
-  
-  switch(char.toUpperCase()) {
-    case 'А':
-      shape.moveTo(0, 0);
-      shape.lineTo(0.3, 1);
-      shape.lineTo(0.6, 0);
-      break;
-    case 'Б':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0.5);
-      shape.lineTo(0, 0.5);
-      break;
-    case 'В':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.5, 1);
-      shape.bezierCurveTo(0.6, 1, 0.6, 0.75, 0.5, 0.5);
-      shape.lineTo(0, 0.5);
-      break;
-    case 'Г':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      break;
-    case 'Д':
-      shape.moveTo(0.1, 0);
-      shape.lineTo(0, 0.2);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0.2);
-      shape.lineTo(0.5, 0);
-      break;
-    case 'Е':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.5, 0.5);
-      break;
-    case 'Ё':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.5, 0.5);
-      // Точки
-      shape.moveTo(0.2, 1.2);
-      shape.lineTo(0.25, 1.2);
-      shape.moveTo(0.4, 1.2);
-      shape.lineTo(0.45, 1.2);
-      break;
-    case 'Ж':
-      shape.moveTo(0, 0);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0.3, 0);
-      shape.lineTo(0.3, 1);
-      shape.moveTo(0.6, 0);
-      shape.lineTo(0, 1);
-      break;
-    case 'З':
-      shape.moveTo(0, 0.8);
-      shape.bezierCurveTo(0.3, 1, 0.6, 0.9, 0.6, 0.7);
-      shape.bezierCurveTo(0.6, 0.5, 0.3, 0.5, 0.3, 0.5);
-      shape.bezierCurveTo(0.3, 0.5, 0.6, 0.5, 0.6, 0.3);
-      shape.bezierCurveTo(0.6, 0.1, 0.3, 0, 0, 0.2);
-      break;
-    case 'И':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 0);
-      shape.lineTo(0.6, 1);
-      break;
-    case 'Й':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 0);
-      shape.lineTo(0.6, 1);
-      // Крышка
-      shape.moveTo(0.1, 1.1);
-      shape.lineTo(0.5, 1.1);
-      break;
-    case 'К':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.6, 0);
-      break;
-    case 'Л':
-      shape.moveTo(0, 0);
-      shape.lineTo(0.3, 1);
-      shape.lineTo(0.6, 0);
-      break;
-    case 'М':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.3, 0.3);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0);
-      break;
-    case 'Н':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.6, 0.5);
-      shape.moveTo(0.6, 0);
-      shape.lineTo(0.6, 1);
-      break;
-    case 'О':
-      shape.moveTo(0.3, 0);
-      shape.bezierCurveTo(0.1, 0, 0, 0.2, 0, 0.5);
-      shape.bezierCurveTo(0, 0.8, 0.1, 1, 0.3, 1);
-      shape.bezierCurveTo(0.5, 1, 0.6, 0.8, 0.6, 0.5);
-      shape.bezierCurveTo(0.6, 0.2, 0.5, 0, 0.3, 0);
-      break;
-    case 'П':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0);
-      break;
-    case 'Р':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.5, 1);
-      shape.bezierCurveTo(0.6, 1, 0.6, 0.75, 0.5, 0.5);
-      shape.lineTo(0, 0.5);
-      break;
-    case 'С':
-      shape.moveTo(0.6, 0.2);
-      shape.bezierCurveTo(0.3, 0, 0, 0.2, 0, 0.5);
-      shape.bezierCurveTo(0, 0.8, 0.3, 1, 0.6, 0.8);
-      break;
-    case 'Т':
-      shape.moveTo(0.3, 0);
-      shape.lineTo(0.3, 1);
-      shape.moveTo(0, 1);
-      shape.lineTo(0.6, 1);
-      break;
-    case 'У':
-      shape.moveTo(0, 1);
-      shape.lineTo(0.3, 0.5);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.3, 0);
-      break;
-    case 'Ф':
-      shape.moveTo(0.3, 0);
-      shape.lineTo(0.3, 1);
-      shape.moveTo(0.3, 0.3);
-      shape.bezierCurveTo(0.1, 0.3, 0, 0.4, 0, 0.5);
-      shape.bezierCurveTo(0, 0.6, 0.1, 0.7, 0.3, 0.7);
-      shape.bezierCurveTo(0.5, 0.7, 0.6, 0.6, 0.6, 0.5);
-      shape.bezierCurveTo(0.6, 0.4, 0.5, 0.3, 0.3, 0.3);
-      break;
-    case 'Х':
-      shape.moveTo(0, 0);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0.6, 0);
-      shape.lineTo(0, 1);
-      break;
-    case 'Ц':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.5, 1);
-      shape.lineTo(0.5, 0);
-      shape.lineTo(0.6, -0.2);
-      shape.lineTo(0.6, 0);
-      shape.lineTo(0, 0);
-      break;
-    case 'Ч':
-      shape.moveTo(0, 1);
-      shape.lineTo(0, 0.5);
-      shape.lineTo(0.6, 0.5);
-      shape.lineTo(0.6, 1);
-      break;
-    case 'Ш':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0);
-      shape.moveTo(0.3, 0);
-      shape.lineTo(0.3, 1);
-      break;
-    case 'Щ':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, -0.2);
-      shape.lineTo(0.7, -0.2);
-      shape.lineTo(0.7, 0);
-      shape.lineTo(0.6, 0);
-      shape.moveTo(0.3, 0);
-      shape.lineTo(0.3, 1);
-      break;
-    case 'Ъ':
-      shape.moveTo(0.1, 0);
-      shape.lineTo(0.1, 1);
-      shape.lineTo(0.5, 1);
-      shape.bezierCurveTo(0.6, 1, 0.6, 0.75, 0.5, 0.5);
-      shape.lineTo(0.1, 0.5);
-      shape.moveTo(0, 1);
-      shape.lineTo(0.1, 1);
-      break;
-    case 'Ы':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.moveTo(0.6, 0);
-      shape.lineTo(0.6, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.4, 0.5);
-      break;
-    case 'Ь':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.5, 1);
-      shape.bezierCurveTo(0.6, 1, 0.6, 0.75, 0.5, 0.5);
-      shape.lineTo(0, 0.5);
-      break;
-    case 'Э':
-      shape.moveTo(0, 0.2);
-      shape.bezierCurveTo(0.3, 0, 0.6, 0.2, 0.6, 0.5);
-      shape.bezierCurveTo(0.6, 0.8, 0.3, 1, 0, 0.8);
-      shape.moveTo(0.2, 0.5);
-      shape.lineTo(0.6, 0.5);
-      break;
-    case 'Ю':
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.moveTo(0, 0.5);
-      shape.lineTo(0.3, 0.5);
-      shape.moveTo(0.3, 0);
-      shape.bezierCurveTo(0.1, 0, 0, 0.2, 0, 0.5);
-      shape.bezierCurveTo(0, 0.8, 0.1, 1, 0.3, 1);
-      shape.bezierCurveTo(0.5, 1, 0.6, 0.8, 0.6, 0.5);
-      shape.bezierCurveTo(0.6, 0.2, 0.5, 0, 0.3, 0);
-      break;
-    case 'Я':
-      shape.moveTo(0.6, 0);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.1, 1);
-      shape.bezierCurveTo(0, 1, 0, 0.75, 0.1, 0.5);
-      shape.lineTo(0.6, 0.5);
-      shape.moveTo(0.1, 0.5);
-      shape.lineTo(0.4, 0);
-      break;
-    default:
-      shape.moveTo(0, 0);
-      shape.lineTo(0, 1);
-      shape.lineTo(0.6, 1);
-      shape.lineTo(0.6, 0);
-      shape.lineTo(0, 0);
-  }
-  
-  return shape;
-};
-
 const WordTower = () => {
   const mountRef = useRef(null);
 
@@ -349,7 +88,6 @@ const WordTower = () => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
-    // Добавляем несколько направленных источников света с разных сторон
     const lights = [
       { position: [10, 10, 10], intensity: 0.8 },
       { position: [-10, -10, -10], intensity: 0.3 },
@@ -365,63 +103,109 @@ const WordTower = () => {
       scene.add(light);
     });
 
-    // Materials
-    const textMaterial = new THREE.MeshPhongMaterial({ 
+    // Create text sprite function
+    const createTextSprite = (text) => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      const fontSize = 32; // Уменьшаем размер шрифта для кубиков
+      context.font = `${fontSize}px Arial`;
+      
+      // Measure text
+      const metrics = context.measureText(text);
+      const textWidth = metrics.width;
+      const textHeight = fontSize;
+
+      // Set canvas size with padding
+      canvas.width = textWidth + 10;
+      canvas.height = textHeight + 10;
+
+      // Draw background
+      context.fillStyle = 'rgba(0, 0, 0, 0)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw text
+      context.font = `${fontSize}px Arial`;
+      context.fillStyle = 'white';
+      context.textBaseline = 'middle';
+      context.fillText(text, 5, canvas.height / 2);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMaterial = new THREE.SpriteMaterial({ 
+        map: texture,
+        transparent: true
+      });
+      
+      const sprite = new THREE.Sprite(spriteMaterial);
+      const scale = 0.5; // Уменьшаем масштаб спрайта для кубиков
+      sprite.scale.set(scale * canvas.width / canvas.height, scale, 1);
+      
+      return sprite;
+    };
+
+    // Box material
+    const boxMaterial = new THREE.MeshPhongMaterial({ 
       color: 0x00aaff,
       specular: 0x444444,
       shininess: 100,
-      side: THREE.DoubleSide,
-      flatShading: false
+      transparent: true,
+      opacity: 0.8
     });
 
-    // Create text meshes
+    // Create letter cubes with text sprites
     towerData.forEach(({ word, pos, dir }) => {
       const [dirX, dirY, dirZ] = directionVectors[dir];
-      const letterSpacing = 1.2; // Увеличенное расстояние между буквами
+      const letterSpacing = 1.2; // Расстояние между кубиками
       
-      word.split('').forEach((char, charIndex) => {
-        const shape = createTextShape(char);
-        const geometry = new THREE.ExtrudeGeometry(shape, {
-          depth: 0.4, // Увеличенная толщина
-          bevelEnabled: true,
-          bevelThickness: 0.1, // Увеличенная толщина фаски
-          bevelSize: 0.05, // Увеличенный размер фаски
-          bevelSegments: 8, // Больше сегментов для фаски
-          steps: 2, // Добавляем промежуточные шаги при экструзии
-          curveSegments: 12 // Больше сегментов для кривых
-        });
+      word.split('').forEach((letter, index) => {
+        // Create cube for each letter
+        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const cube = new THREE.Mesh(cubeGeometry, boxMaterial);
+        cube.castShadow = true;
+        cube.receiveShadow = true;
 
-        // Масштабируем геометрию для увеличения размера букв
-        geometry.scale(1.5, 1.5, 1.5);
-        geometry.computeBoundingBox();
-        geometry.computeVertexNormals(); // Пересчитываем нормали для лучшего освещения
+        // Create text sprite for the letter
+        const textSprite = createTextSprite(letter);
         
-        const mesh = new THREE.Mesh(geometry, textMaterial);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        
-        // Позиционируем букву относительно начальной позиции слова
-        mesh.position.x = pos[0] + dirX * charIndex * letterSpacing;
-        mesh.position.y = pos[1] + dirY * charIndex * letterSpacing;
-        mesh.position.z = pos[2] + dirZ * charIndex * letterSpacing;
-        
-        // Поворачиваем буквы в зависимости от направления
+        // Position the cube
+        cube.position.set(
+          pos[0] + dirX * index * letterSpacing,
+          pos[1] + dirY * index * letterSpacing,
+          pos[2] + dirZ * index * letterSpacing
+        );
+
+        // Position text sprite on the cube
         if (dir === 1) { // вдоль Z
-          mesh.rotation.y = Math.PI;
+          cube.rotation.y = Math.PI / 2;
+          textSprite.position.set(0, 0.6, 0);
         } else if (dir === 2) { // вдоль X
-          mesh.rotation.y = Math.PI / 2;
+          textSprite.position.set(0, 0.6, 0);
         } else if (dir === 3) { // вдоль Y
-          mesh.rotation.x = -Math.PI / 2;
+          cube.rotation.z = Math.PI / 2;
+          textSprite.position.set(0, 0, 0.6);
         }
-        
-        scene.add(mesh);
+
+        // Add text sprite as child of cube
+        cube.add(textSprite);
+        scene.add(cube);
       });
     });
+
+    // Grid helper
+    const gridHelper = new THREE.GridHelper(20, 20);
+    scene.add(gridHelper);
 
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
+      
+      // Update all sprites to face camera
+      scene.traverse((object) => {
+        if (object instanceof THREE.Sprite) {
+          object.quaternion.copy(camera.quaternion);
+        }
+      });
+      
       renderer.render(scene, camera);
     };
 
