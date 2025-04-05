@@ -217,7 +217,8 @@ const WordTower = () => {
         child instanceof THREE.AmbientLight || 
         child instanceof THREE.DirectionalLight ||
         child instanceof THREE.GridHelper ||
-        child instanceof THREE.AxesHelper
+        child instanceof THREE.AxesHelper ||
+        child instanceof THREE.Sprite
       );
 
       // Create letter cubes with text sprites
