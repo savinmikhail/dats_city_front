@@ -48,9 +48,9 @@ const defaultTowerData = [
 ];
 
 const directionVectors = {
-  1: [0, 0, -1], // назад по Z
+  1: [0, -1, 0], // вниз по Y
   2: [1, 0, 0],  // вправо по X
-  3: [0, 1, 0]   // вверх по Y
+  3: [0, 0, 1]   // вверх по Z
 };
 
 const TowerInput = ({ onUpdate }) => {
@@ -239,14 +239,13 @@ const WordTower = () => {
             pos[2] + dirZ * index
           );
 
-          if (dir === 1) {
-            cube.rotation.y = Math.PI / 2;
-            textSprite.position.set(0, 0.6, 0);
-          } else if (dir === 2) {
-            textSprite.position.set(0, 0.6, 0);
-          } else if (dir === 3) {
-            cube.rotation.z = Math.PI / 2;
+          if (dir === 1) { // вдоль Y
+            cube.rotation.x = Math.PI / 2;
             textSprite.position.set(0, 0, 0.6);
+          } else if (dir === 2) { // вдоль X
+            textSprite.position.set(0, 0, 0.6);
+          } else if (dir === 3) { // вдоль Z
+            textSprite.position.set(0, 0.6, 0);
           }
 
           cube.add(textSprite);
@@ -256,8 +255,16 @@ const WordTower = () => {
     };
 
     // Grid helper
-    const gridHelper = new THREE.GridHelper(20, 20);
+    const gridHelper = new THREE.GridHelper(30, 30);
     scene.add(gridHelper);
+
+    // Add vertical grid lines
+    const verticalGridSize = 100;
+    const verticalGridDivisions = 20;
+    const verticalGridHelper = new THREE.GridHelper(verticalGridSize, verticalGridDivisions);
+    verticalGridHelper.rotation.x = Math.PI / 2;
+    verticalGridHelper.position.y = verticalGridSize / 2;
+    scene.add(verticalGridHelper);
 
     // Axes helper
     const axesHelper = new THREE.AxesHelper(5);
@@ -300,7 +307,7 @@ const WordTower = () => {
     // Add labels to axes
     const axisLabels = [
       { text: 'X', color: '#ff0000', position: [5.5, 0, 0] },
-      { text: 'Y', color: '#00ff00', position: [0, 5.5, 0] },
+      { text: 'Y', color: '#00ff00', position: [0, -5.5, 0] },
       { text: 'Z', color: '#0000ff', position: [0, 0, 5.5] }
     ];
 
