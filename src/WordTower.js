@@ -70,7 +70,7 @@ const TowerInput = ({ onUpdate }) => {
   return (
     <div style={{
       position: 'absolute',
-      top: 20,
+      top: 100,
       left: 20,
       zIndex: 1000,
       background: 'rgba(0, 0, 0, 0.7)',
