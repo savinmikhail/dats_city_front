@@ -194,6 +194,61 @@ const WordTower = () => {
     const gridHelper = new THREE.GridHelper(20, 20);
     scene.add(gridHelper);
 
+    // Axes helper
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+
+    // Create axis labels
+    const createAxisLabel = (text, color) => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      const fontSize = 24;
+      context.font = `${fontSize}px Arial`;
+      
+      // Measure text
+      const metrics = context.measureText(text);
+      const textWidth = metrics.width;
+      const textHeight = fontSize;
+
+      // Set canvas size with padding
+      canvas.width = textWidth + 10;
+      canvas.height = textHeight + 10;
+
+      // Draw background
+      context.fillStyle = 'rgba(0, 0, 0, 0)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw text
+      context.font = `${fontSize}px Arial`;
+      context.fillStyle = color;
+      context.textBaseline = 'middle';
+      context.fillText(text, 5, canvas.height / 2);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMaterial = new THREE.SpriteMaterial({ 
+        map: texture,
+        transparent: true
+      });
+      
+      const sprite = new THREE.Sprite(spriteMaterial);
+      sprite.scale.set(0.5 * canvas.width / canvas.height, 0.5, 1);
+      
+      return sprite;
+    };
+
+    // Add labels to axes
+    const axisLabels = [
+      { text: 'X', color: '#ff0000', position: [5.5, 0, 0] },
+      { text: 'Y', color: '#00ff00', position: [0, 5.5, 0] },
+      { text: 'Z', color: '#0000ff', position: [0, 0, 5.5] }
+    ];
+
+    axisLabels.forEach(({ text, color, position }) => {
+      const label = createAxisLabel(text, color);
+      label.position.set(...position);
+      scene.add(label);
+    });
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
