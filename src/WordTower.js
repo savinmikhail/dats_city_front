@@ -218,7 +218,8 @@ const WordTower = () => {
         child instanceof THREE.DirectionalLight ||
         child instanceof THREE.GridHelper ||
         child instanceof THREE.AxesHelper ||
-        child instanceof THREE.Sprite
+        child instanceof THREE.Sprite ||
+        child instanceof THREE.LineSegments
       );
 
       // Create letter cubes with text sprites
@@ -258,64 +259,45 @@ const WordTower = () => {
     const gridHelper = new THREE.GridHelper(30, 30);
     scene.add(gridHelper);
 
-    // Add vertical grid lines
-    const verticalGridSize = 100;
-    const verticalGridDivisions = 20;
-    const verticalGridHelper = new THREE.GridHelper(verticalGridSize, verticalGridDivisions);
-    verticalGridHelper.rotation.x = Math.PI / 2;
-    verticalGridHelper.position.y = verticalGridSize / 2;
-    scene.add(verticalGridHelper);
+    // Bounding box
+    const boxGeometry = new THREE.BoxGeometry(30, 30, 100);
+    const boxEdges = new THREE.EdgesGeometry(boxGeometry);
+    const boundingBoxMaterial = new THREE.LineBasicMaterial({ 
+      color: 0xff0000,
+      transparent: false,
+      linewidth: 2
+    });
+    const boundingBox = new THREE.LineSegments(boxEdges, boundingBoxMaterial);
+    boundingBox.position.set(15, -15, 50);
+    scene.add(boundingBox);
 
-    // Axes helper
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
-
-    // Create axis labels
-    const createAxisLabel = (text, color) => {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      const fontSize = 24;
-      context.font = `${fontSize}px Arial`;
-      
-      const metrics = context.measureText(text);
-      const textWidth = metrics.width;
-      const textHeight = fontSize;
-
-      canvas.width = textWidth + 10;
-      canvas.height = textHeight + 10;
-
-      context.fillStyle = 'rgba(0, 0, 0, 0)';
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      context.font = `${fontSize}px Arial`;
-      context.fillStyle = color;
-      context.textBaseline = 'middle';
-      context.fillText(text, 5, canvas.height / 2);
-
-      const texture = new THREE.CanvasTexture(canvas);
-      const spriteMaterial = new THREE.SpriteMaterial({ 
-        map: texture,
-        transparent: true
-      });
-      
-      const sprite = new THREE.Sprite(spriteMaterial);
-      sprite.scale.set(0.5 * canvas.width / canvas.height, 0.5, 1);
-      
-      return sprite;
-    };
-
-    // Add labels to axes
-    const axisLabels = [
-      { text: 'X', color: '#ff0000', position: [5.5, 0, 0] },
-      { text: 'Y', color: '#00ff00', position: [0, -5.5, 0] },
-      { text: 'Z', color: '#0000ff', position: [0, 0, 5.5] }
+    // Create dimension labels using the existing createTextSprite function
+    const dimensionLabels = [
+      { text: '30', position: [30, 0, 0], color: 'white' },
+      { text: '30', position: [0, -30, 0], color: 'white' },
+      { text: '100', position: [0, 0, 100], color: 'white' }
     ];
 
-    axisLabels.forEach(({ text, color, position }) => {
-      const label = createAxisLabel(text, color);
+    dimensionLabels.forEach(({ text, position, color }) => {
+      const label = createTextSprite(text);
       label.position.set(...position);
       scene.add(label);
     });
+
+    // Axes helper with increased size
+    const axesHelper = new THREE.AxesHelper(10); // Увеличиваем размер осей
+    scene.add(axesHelper);
+
+    // Create axis labels
+    const axisLabels = [
+      { text: 'X', color: '#ff0000', position: [11, 0, 0] },
+      { text: 'Y', color: '#00ff00', position: [0, -11, 0] },
+      { text: 'Z', color: '#0000ff', position: [0, 0, 11] }
+    ];
+
+    // Initial camera position for better view
+    camera.position.set(20, -20, 40);
+    camera.lookAt(15, -15, 50);
 
     // Initial tower creation
     createTower(towerData);
